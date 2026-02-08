@@ -1,14 +1,14 @@
-import type { Track, TrackId } from '@shared/objs/track';
 import {
     PlayerStateType,
     type PausedState,
     type PlayingState,
     type StoppedState,
-} from './player-state';
-import { Milliseconds } from '@shared/units/time';
-import type { Volume } from '@shared/units/volume';
+} from '@state/player';
+import type { TrackId } from '@state/track';
+import type { Milliseconds } from '@type/units/time';
+import type { Volume } from '@type/units/volume';
 
-export function play(state: StoppedState): PlayingState {
+export function start(state: StoppedState): PlayingState {
     return {
         ...state,
         state: PlayerStateType.Playing,
@@ -22,10 +22,17 @@ export function pause(state: PlayingState): PausedState {
     };
 }
 
-export function resume(state: PausedState): PlayingState {
+export function play(state: PausedState): PlayingState {
     return {
         ...state,
         state: PlayerStateType.Playing,
+    };
+}
+
+export function stop(state: PlayingState | PausedState): StoppedState {
+    return {
+        ...state,
+        state: PlayerStateType.Stopped,
     };
 }
 
@@ -62,14 +69,14 @@ export function updateVolume(
     trackId: TrackId,
     volume: Volume
 ): PausedState | PlayingState {
-    const trackState = state.trackStates[trackId];
-    if (trackState) {
+    const track = state.tracks[trackId];
+    if (track) {
         return {
             ...state,
-            trackStates: {
-                ...state.trackStates,
+            tracks: {
+                ...state.tracks,
                 [trackId]: {
-                    ...trackState,
+                    ...track,
                     volume,
                 },
             },

@@ -1,15 +1,9 @@
-import type { Track, TrackId } from '@shared/objs/track';
-import type { Milliseconds } from '@shared/units/time';
-import type { Volume } from '@shared/units/volume';
-import type { State } from '@shared/utils/state';
-
-export type TrackState = {
-    readonly track: Track;
-    readonly volume: Volume;
-};
+import type { Milliseconds } from '@type/units/time';
+import type { Track, TrackId } from './track';
+import type { State } from '@type/utils/state';
 
 type PlayerStateBase = {
-    readonly trackStates: Readonly<Record<TrackId, TrackState>>;
+    readonly tracks: Readonly<Record<TrackId, Track>>;
     readonly position: Milliseconds;
 };
 
@@ -25,20 +19,13 @@ export type PausedState = State<PlayerStateBase, PlayerStateType.Paused>;
 
 export type PlayerState = StoppedState | PlayingState | PausedState;
 
-export function createTrackState(track: Track): TrackState {
-    return {
-        track,
-        volume: 0 as Volume,
-    };
-}
-
 export function createPlayerState(tracks: Track[]): StoppedState {
-    const trackStates: Record<TrackId, TrackState> = {};
+    const trackStates: Record<TrackId, Track> = {};
     for (const track of tracks) {
-        trackStates[track.id] = createTrackState(track);
+        trackStates[track.id] = track;
     }
     return {
-        trackStates,
+        tracks: trackStates,
         position: 0 as Milliseconds,
         state: PlayerStateType.Stopped,
     };

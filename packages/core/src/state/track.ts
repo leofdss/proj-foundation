@@ -1,6 +1,8 @@
-import { InvalidMillisecondsError, Milliseconds } from '../units/time';
-import type { Brand } from '../utils/brand';
-import { err, ok, type Result } from '../utils/result';
+import type { Audio } from '@type/audio';
+import type { InvalidMillisecondsError } from '@type/units/time';
+import { Volume } from '@type/units/volume';
+import type { Brand } from '@type/utils/brand';
+import { err, ok, type Result } from '@type/utils/result';
 
 export type TrackId = Brand<string, 'TrackId'>;
 
@@ -21,37 +23,37 @@ export const TrackId = {
 
 export type Track = {
     readonly id: TrackId;
-    readonly title: string;
-    readonly duration: Milliseconds;
+    readonly audio: Audio;
+    readonly volume: Volume;
 };
 
 export type CreateTrackInput = {
     id: string;
-    title: string;
-    duration: number;
+    audio: Audio;
+    volume: Volume;
 };
 
 export function createTrack({
     id,
-    title,
-    duration,
+    audio,
+    volume,
 }: CreateTrackInput): Result<
     Track,
     InvalidTrackIdError | InvalidMillisecondsError
 > {
     const trackIdResult = TrackId.create(id);
-    if (!trackIdResult.ok) {
+    if (trackIdResult.ok === false) {
         return trackIdResult;
     }
 
-    const durationResult = Milliseconds.create(duration);
-    if (!durationResult.ok) {
-        return durationResult;
+    const volumeResult = Volume.create(volume);
+    if (volumeResult.ok === false) {
+        return volumeResult;
     }
 
     return ok({
         id: trackIdResult.value,
-        title,
-        duration: durationResult.value,
+        audio,
+        volume: volumeResult.value,
     });
 }

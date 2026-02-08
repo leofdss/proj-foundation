@@ -28,7 +28,11 @@
         "isolatedModules": true,
         "baseUrl": "./",
         "paths": {
-            "@shared/*": ["src/shared/*"]
+            "@domain/*": ["src/domain/*"],
+            "@invariants/*": ["src/invariants/*"],
+            "@state/*": ["src/state/*"],
+            "@type/*": ["src/type/*"],
+            "@use-cases/*": ["src/use-cases/*"]
         }
     },
     "include": ["src"]
