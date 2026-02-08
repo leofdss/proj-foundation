@@ -8,7 +8,7 @@ export type TrackState = {
     readonly volume: Volume;
 };
 
-export type PlayerState = {
+type PlayerStateBase = {
     readonly trackStates: Readonly<Record<TrackId, TrackState>>;
     readonly position: Milliseconds;
 };
@@ -19,9 +19,11 @@ export enum PlayerStateType {
     Paused = 'Paused',
 }
 
-export type StoppedState = State<PlayerState, PlayerStateType.Stopped>;
-export type PlayingState = State<PlayerState, PlayerStateType.Playing>;
-export type PausedState = State<PlayerState, PlayerStateType.Paused>;
+export type StoppedState = State<PlayerStateBase, PlayerStateType.Stopped>;
+export type PlayingState = State<PlayerStateBase, PlayerStateType.Playing>;
+export type PausedState = State<PlayerStateBase, PlayerStateType.Paused>;
+
+export type PlayerState = StoppedState | PlayingState | PausedState;
 
 export function createTrackState(track: Track): TrackState {
     return {
