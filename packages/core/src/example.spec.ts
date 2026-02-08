@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { sum, SumError } from './example';
-import { err, Err, ok } from './shared/result';
+import { err, ok } from './shared/utils/result';
 
 describe('sum', () => {
     it('should sum two numbers', () => {

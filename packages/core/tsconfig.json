@@ -25,7 +25,11 @@
         "outDir": "dist",
         "rootDir": "src",
         "verbatimModuleSyntax": true,
-        "isolatedModules": true
+        "isolatedModules": true,
+        "baseUrl": "./",
+        "paths": {
+            "@shared/*": ["src/shared/*"]
+        }
     },
     "include": ["src"]
 }

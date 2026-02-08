@@ -1,4 +1,4 @@
-import { err, ok, type Result } from './shared/result';
+import { err, ok, type Result } from './shared/utils/result';
 
 class SumError extends Error {}
 
