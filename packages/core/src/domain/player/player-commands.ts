@@ -1,4 +1,4 @@
-import type { Track } from '@shared/objs/track';
+import type { Track, TrackId } from '@shared/objs/track';
 import {
     PlayerStateType,
     type PausedState,
@@ -47,14 +47,33 @@ export function updatedPosition(
     };
 }
 
-export function updateVolume(state: PausedState, volume: Volume): PausedState;
-export function updateVolume(state: PlayingState, volume: Volume): PlayingState;
+export function updateVolume(
+    state: PausedState,
+    trackId: TrackId,
+    volume: Volume
+): PausedState;
+export function updateVolume(
+    state: PlayingState,
+    trackId: TrackId,
+    volume: Volume
+): PlayingState;
 export function updateVolume(
     state: PausedState | PlayingState,
+    trackId: TrackId,
     volume: Volume
 ): PausedState | PlayingState {
-    return {
-        ...state,
-        volume,
-    };
+    const trackState = state.trackStates[trackId];
+    if (trackState) {
+        return {
+            ...state,
+            trackStates: {
+                ...state.trackStates,
+                [trackId]: {
+                    ...trackState,
+                    volume,
+                },
+            },
+        };
+    }
+    return state;
 }
