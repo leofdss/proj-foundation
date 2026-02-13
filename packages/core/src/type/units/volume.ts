@@ -18,7 +18,7 @@ export class InvalidVolumeError extends Error {
 
 export const Decibels = {
     create(value: number): Result<Decibels, InvalidDecibelsError> {
-        if (!Number.isFinite(value)) {
+        if (!Number.isFinite(value) || value < 0) {
             return err(new InvalidDecibelsError());
         }
         return ok(value as Decibels);

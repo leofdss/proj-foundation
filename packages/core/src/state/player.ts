@@ -27,6 +27,6 @@ export function createPlayerState(tracks: Track[]): StoppedState {
     return {
         tracks: trackStates,
         position: 0 as Milliseconds,
-        state: PlayerStateType.Stopped,
+        kind: PlayerStateType.Stopped,
     };
 }

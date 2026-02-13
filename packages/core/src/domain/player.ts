@@ -11,28 +11,28 @@ import type { Volume } from '@type/units/volume';
 export function start(state: StoppedState): PlayingState {
     return {
         ...state,
-        state: PlayerStateType.Playing,
+        kind: PlayerStateType.Playing,
     };
 }
 
 export function pause(state: PlayingState): PausedState {
     return {
         ...state,
-        state: PlayerStateType.Paused,
+        kind: PlayerStateType.Paused,
     };
 }
 
 export function play(state: PausedState): PlayingState {
     return {
         ...state,
-        state: PlayerStateType.Playing,
+        kind: PlayerStateType.Playing,
     };
 }
 
 export function stop(state: PlayingState | PausedState): StoppedState {
     return {
         ...state,
-        state: PlayerStateType.Stopped,
+        kind: PlayerStateType.Stopped,
     };
 }
 
@@ -56,28 +56,34 @@ export function updatedPosition(
 
 export function updateVolume(
     state: PausedState,
-    trackId: TrackId,
-    volume: Volume
+    update: {
+        trackId: TrackId;
+        volume: Volume;
+    }
 ): PausedState;
 export function updateVolume(
     state: PlayingState,
-    trackId: TrackId,
-    volume: Volume
+    update: {
+        trackId: TrackId;
+        volume: Volume;
+    }
 ): PlayingState;
 export function updateVolume(
     state: PausedState | PlayingState,
-    trackId: TrackId,
-    volume: Volume
+    update: {
+        trackId: TrackId;
+        volume: Volume;
+    }
 ): PausedState | PlayingState {
-    const track = state.tracks[trackId];
+    const track = state.tracks[update.trackId];
     if (track) {
         return {
             ...state,
             tracks: {
                 ...state.tracks,
-                [trackId]: {
+                [update.trackId]: {
                     ...track,
-                    volume,
+                    volume: update.volume,
                 },
             },
         };

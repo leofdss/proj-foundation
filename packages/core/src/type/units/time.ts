@@ -11,7 +11,7 @@ export class InvalidMillisecondsError extends Error {
 
 export const Milliseconds = {
     create(value: number): Result<Milliseconds, InvalidMillisecondsError> {
-        if (!Number.isFinite(value)) {
+        if (!Number.isFinite(value) || value < 0) {
             return err(new InvalidMillisecondsError());
         }
         return ok(value as Milliseconds);

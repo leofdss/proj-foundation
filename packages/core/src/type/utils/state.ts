@@ -1,1 +1,1 @@
-export type State<K, T> = K & { readonly state: T };
+export type State<K, T> = K & { readonly kind: T };
