@@ -30,6 +30,17 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 nvm install 24
 ```
 
+```bash
+# Download and install Rust:
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+```bash
+# Plugin depedendece
+sudo apt install rust-src
+sudo apt install build-essential
+```
+
 ## Oh my bash
 
 ```bash
@@ -53,9 +64,9 @@ echo -e 'Types: deb\nURIs: https://download.vscodium.com/debs\nSuites: vscodium\
 | sudo tee /etc/apt/sources.list.d/vscodium.sources
 ```
 
- ```bash
- sudo apt update && sudo apt install codium
- ```
+```bash
+sudo apt update && sudo apt install codium
+```
 
 ```bash
 distrobox-export --app codium
@@ -64,7 +75,7 @@ distrobox-export --app codium
 ## Alias
 
 ```bash
-echo 'alias code="codium"' >> ~/.bashrc 
+echo 'alias code="codium"' >> ~/.bashrc
 ```
 
 ```bash

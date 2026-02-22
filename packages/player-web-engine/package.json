@@ -1,5 +1,5 @@
 {
-    "name": "core",
+    "name": "@proj-foundation/player-web-engine",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
