@@ -37,7 +37,6 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 ```bash
 # Plugin depedendece
-sudo apt install rust-src
 sudo apt install build-essential
 ```
 
