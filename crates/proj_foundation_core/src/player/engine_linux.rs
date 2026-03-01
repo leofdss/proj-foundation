@@ -4,19 +4,19 @@ use crate::core::entity::AudioRef;
 pub struct PlayerEngineLinux {}
 
 impl PlayerEngine for PlayerEngineLinux {
-    fn start(&self, _playlist: &[AudioRef]) {
+    fn start(&self, _playlist: &[AudioRef]) -> Result<(), super::PlayerEngineError> {
         todo!()
     }
 
-    fn play(&self) {
+    fn play(&self) -> Result<(), super::PlayerEngineError> {
         todo!()
     }
 
-    fn pause(&self) {
+    fn pause(&self) -> Result<(), super::PlayerEngineError> {
         todo!()
     }
 
-    fn stop(&self) {
+    fn stop(&self) -> Result<(), super::PlayerEngineError> {
         todo!()
     }
 }

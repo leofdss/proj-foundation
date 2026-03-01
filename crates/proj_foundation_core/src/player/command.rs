@@ -1,3 +1,4 @@
+use super::PlayerError;
 use crate::core::entity::AudioRef;
 use crate::core::units::Milliseconds;
 
@@ -7,4 +8,6 @@ pub enum PlayerCommand {
     Pause,
     Stop,
     UpdatePosition(Milliseconds),
+
+    EngineFailed(PlayerError),
 }

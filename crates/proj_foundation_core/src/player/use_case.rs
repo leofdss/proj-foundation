@@ -107,5 +107,10 @@ pub fn player_use_case(
         (PlayerStatus::Paused { .. }, PlayerCommand::UpdatePosition(pos)) => {
             transition(state, PlayerStatus::Paused { position: pos }, vec![])
         }
+
+        //
+        // Error
+        //
+        (_, PlayerCommand::EngineFailed(_)) => transition(state, PlayerStatus::Stopped, vec![]),
     }
 }

@@ -23,7 +23,15 @@ impl<E: PlayerEngine> App<E> {
 
     pub fn dispatch(&mut self, command: PlayerCommand) {
         let effects = self.store.dispatch(command);
-        self.effect_handler.handle(effects);
+
+        let mut new_commands = Vec::new();
+
+        self.effect_handler
+            .handle(effects, |cmd| new_commands.push(cmd));
+
+        for cmd in new_commands {
+            self.dispatch(cmd);
+        }
     }
 
     pub fn state(&self) -> &PlayerState {

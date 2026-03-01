@@ -6,6 +6,7 @@ pub use effect::PlayerEffect;
 
 pub mod engine;
 pub use engine::PlayerEngine;
+pub use engine::PlayerEngineError;
 
 pub mod engine_linux;
 pub use engine_linux::PlayerEngineLinux;
@@ -23,3 +24,6 @@ pub use effect_hander::PlayerEffectHandler;
 
 pub mod store;
 pub use store::PlayerStore;
+
+pub mod error;
+pub use error::PlayerError;
