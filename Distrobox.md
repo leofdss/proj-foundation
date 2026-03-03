@@ -21,16 +21,6 @@ sudo apt install git
 ```
 
 ```bash
-# Download and install nvm:
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-```
-
-```bash
-# Download and install Node.js:
-nvm install 24
-```
-
-```bash
 # Download and install Rust:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```

@@ -6,5 +6,5 @@
 
 ## Dependencies
 
-- nodejs v20.19.0 or newer
-- git
+- Rust
+- Git
