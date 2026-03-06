@@ -3,38 +3,17 @@ use super::PlayerCommand;
 use super::PlayerEffect;
 use super::PlayerState;
 use super::PlayerStatus;
-use crate::common::units::Milliseconds;
 use crate::common::units::Volume;
-
-fn no_transition(state: &PlayerState) -> (PlayerState, Vec<PlayerEffect>) {
-    (state.clone(), vec![])
-}
-
-fn transition(
-    state: &PlayerState,
-    new_status: PlayerStatus,
-    effects: Vec<PlayerEffect>,
-) -> (PlayerState, Vec<PlayerEffect>) {
-    (
-        PlayerState {
-            status: new_status,
-            ..state.clone()
-        },
-        effects,
-    )
-}
+use crate::core::player::PlayerEvent;
 
 pub fn player_use_case(
     state: &PlayerState,
     command: PlayerCommand,
 ) -> (PlayerState, Vec<PlayerEffect>) {
     match (&state.status, command) {
-        //
-        // LOAD PLAYLIST
-        //
         (_, PlayerCommand::LoadPlaylist(list)) => (
             PlayerState {
-                status: PlayerStatus::Stopped,
+                status: PlayerStatus::Init,
                 tracks: list
                     .into_iter()
                     .map(|audio| AudioTrack {
@@ -43,70 +22,49 @@ pub fn player_use_case(
                     })
                     .collect(),
             },
+            vec![PlayerEffect::LoadPlaylist],
+        ),
+
+        (PlayerStatus::Ready | PlayerStatus::Stopped, PlayerCommand::Play) => (
+            PlayerState {
+                status: PlayerStatus::Playing,
+                ..state.clone()
+            },
             vec![PlayerEffect::StartPlayback],
         ),
 
-        //
-        // STOPPED
-        //
-        (PlayerStatus::Stopped, PlayerCommand::Play) => transition(
-            state,
-            PlayerStatus::Playing {
-                position: Milliseconds(0),
+        (PlayerStatus::Playing, PlayerCommand::Stop) => (
+            PlayerState {
+                status: PlayerStatus::Stopped,
+                ..state.clone()
             },
-            vec![PlayerEffect::Play],
+            vec![PlayerEffect::StopPlayback],
         ),
 
-        (
-            PlayerStatus::Stopped,
-            PlayerCommand::Pause | PlayerCommand::Stop | PlayerCommand::UpdatePosition(_),
-        ) => no_transition(state),
-
-        //
-        // PLAYING
-        //
-        (PlayerStatus::Playing { position }, PlayerCommand::Pause) => transition(
-            state,
-            PlayerStatus::Paused {
-                position: position.clone(),
+        (PlayerStatus::Init, PlayerCommand::EngineEvent(PlayerEvent::Ready)) => (
+            PlayerState {
+                status: PlayerStatus::Ready,
+                ..state.clone()
             },
-            vec![PlayerEffect::Pause],
+            vec![],
         ),
 
-        (PlayerStatus::Playing { .. }, PlayerCommand::Stop) => {
-            transition(state, PlayerStatus::Stopped, vec![PlayerEffect::Stop])
-        }
-
-        (PlayerStatus::Playing { .. }, PlayerCommand::Play) => no_transition(state),
-
-        (PlayerStatus::Playing { .. }, PlayerCommand::UpdatePosition(pos)) => {
-            transition(state, PlayerStatus::Playing { position: pos }, vec![])
-        }
-
-        //
-        // PAUSED
-        //
-        (PlayerStatus::Paused { position }, PlayerCommand::Play) => transition(
-            state,
-            PlayerStatus::Playing {
-                position: position.clone(),
+        (PlayerStatus::Playing, PlayerCommand::EngineEvent(PlayerEvent::PlaybackFinished)) => (
+            PlayerState {
+                status: PlayerStatus::Stopped,
+                ..state.clone()
             },
-            vec![PlayerEffect::Play],
+            vec![],
         ),
 
-        (PlayerStatus::Paused { .. }, PlayerCommand::Stop) => {
-            transition(state, PlayerStatus::Stopped, vec![PlayerEffect::Stop])
-        }
+        (_, PlayerCommand::EngineEvent(PlayerEvent::EngineFailed)) => (
+            PlayerState {
+                status: PlayerStatus::Init,
+                ..state.clone()
+            },
+            vec![],
+        ),
 
-        (PlayerStatus::Paused { .. }, PlayerCommand::Pause) => no_transition(state),
-
-        (PlayerStatus::Paused { .. }, PlayerCommand::UpdatePosition(pos)) => {
-            transition(state, PlayerStatus::Paused { position: pos }, vec![])
-        }
-
-        //
-        // Error
-        //
-        (_, PlayerCommand::EngineFailed(_)) => transition(state, PlayerStatus::Stopped, vec![]),
+        _ => (state.clone(), vec![]),
     }
 }

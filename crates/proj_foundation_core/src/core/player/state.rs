@@ -1,17 +1,13 @@
 use crate::common::entity::AudioRef;
-use crate::common::units::Milliseconds;
 use crate::common::units::Volume;
 
 #[derive(Clone, Default)]
 pub enum PlayerStatus {
     #[default]
+    Init,
+    Ready,
+    Playing,
     Stopped,
-    Playing {
-        position: Milliseconds,
-    },
-    Paused {
-        position: Milliseconds,
-    },
 }
 
 #[derive(Clone)]

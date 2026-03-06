@@ -1,4 +1,4 @@
-use crate::{core::player::PlayerEngine, runtime::PlayerRuntime};
+use crate::{infra::player::engine::PlayerEngine, runtime::PlayerRuntime};
 
 pub struct App<E: PlayerEngine> {
     player: PlayerRuntime<E>,
@@ -9,7 +9,7 @@ impl<E: PlayerEngine> App<E> {
         App { player }
     }
 
-    pub fn run(&self) {
-        self.player.run();
+    pub async fn run(self) {
+        self.player.run().await;
     }
 }

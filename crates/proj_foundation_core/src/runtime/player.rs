@@ -1,35 +1,71 @@
-use crate::core::player::{
-    PlayerCommand, PlayerEffectHandler, PlayerEngine, PlayerState, PlayerStore,
+use tokio::sync::mpsc::Receiver;
+
+use crate::{
+    common::entity::AudioRef,
+    core::player::{PlayerCommand, PlayerEffect, PlayerEvent, PlayerStore},
+    infra::player::engine::PlayerEngine,
 };
 
 pub struct PlayerRuntime<E: PlayerEngine> {
     store: PlayerStore,
-    effect_handler: PlayerEffectHandler<E>,
+    engine: E,
+    command_rx: Receiver<PlayerCommand>,
+    event_rx: Receiver<PlayerEvent>,
 }
 
 impl<E: PlayerEngine> PlayerRuntime<E> {
-    pub fn new(store: PlayerStore, effect_handler: PlayerEffectHandler<E>) -> Self {
+    pub fn new(
+        store: PlayerStore,
+        engine: E,
+        command_rx: Receiver<PlayerCommand>,
+        event_rx: Receiver<PlayerEvent>,
+    ) -> Self {
         PlayerRuntime {
             store,
-            effect_handler,
+            engine,
+            command_rx,
+            event_rx,
         }
     }
 
-    pub fn run(&self) {
-        println!("run");
-    }
-
-    pub fn dispatch(&mut self, command: PlayerCommand) {
-        let mut queue = vec![command];
-
-        while let Some(cmd) = queue.pop() {
-            let effects = self.store.dispatch(cmd);
-            let new_commands = self.effect_handler.handle(effects, &self.store.state);
-            queue.extend(new_commands);
+    pub async fn run(mut self) {
+        loop {
+            tokio::select! {
+                Some(cmd) = self.command_rx.recv() => {
+                    self.process_command(cmd);
+                }
+                Some(event) = self.event_rx.recv() => {
+                    self.process_command(
+                        PlayerCommand::EngineEvent(event)
+                    );
+                }
+            }
         }
     }
 
-    pub fn state(&self) -> &PlayerState {
-        self.store.get_state()
+    fn process_command(&mut self, command: PlayerCommand) {
+        let effects = self.store.dispatch(command);
+
+        for effect in effects {
+            self.execute_effect(effect);
+        }
+    }
+
+    fn execute_effect(&self, effect: PlayerEffect) {
+        match effect {
+            PlayerEffect::LoadPlaylist => {
+                let list: Vec<AudioRef> = self
+                    .store
+                    .state
+                    .tracks
+                    .clone()
+                    .into_iter()
+                    .map(|e| e.audio)
+                    .collect();
+                self.engine.load_playlist(&list);
+            }
+            PlayerEffect::StartPlayback => self.engine.start(),
+            PlayerEffect::StopPlayback => self.engine.stop(),
+        }
     }
 }
