@@ -1,13 +1,9 @@
-use super::PlayerEngineError;
+use super::PlayerEvent;
 use crate::common::entity::AudioRef;
-use crate::common::units::Milliseconds;
 
 pub enum PlayerCommand {
     LoadPlaylist(Vec<AudioRef>),
     Play,
-    Pause,
     Stop,
-    UpdatePosition(Milliseconds),
-
-    EngineFailed(PlayerEngineError),
+    EngineEvent(PlayerEvent),
 }

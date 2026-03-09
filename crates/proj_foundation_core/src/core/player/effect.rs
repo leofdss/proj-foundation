@@ -1,6 +1,5 @@
 pub enum PlayerEffect {
+    LoadPlaylist,
     StartPlayback,
-    Play,
-    Pause,
-    Stop,
+    StopPlayback,
 }

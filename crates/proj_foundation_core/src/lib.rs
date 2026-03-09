@@ -1,29 +1,23 @@
+use tokio::sync::mpsc;
+
+use crate::{
+    app::App, core::player::PlayerStore, infra::player::TokioPlayerEngine, runtime::PlayerRuntime,
+};
+
 pub mod app;
 pub mod common;
 pub mod core;
 pub mod infra;
 pub mod runtime;
-use crate::{
-    app::App,
-    core::player::{PlayerEffectHandler, PlayerStore},
-    infra::player::engine_linux::PlayerEngineLinux,
-    runtime::PlayerRuntime,
-};
 
-pub fn player_coordinator_linux_factory() -> PlayerRuntime<PlayerEngineLinux> {
+async fn bootstrap() {
+    let (command_tx, command_rx) = mpsc::channel(32);
+    let (event_tx, event_rx) = mpsc::channel(32);
     let store = PlayerStore::default();
-    let engine = PlayerEngineLinux::new();
-
-    let effect_handler = PlayerEffectHandler::new(engine);
-    let coordinator = PlayerRuntime::new(store, effect_handler);
-
-    coordinator
-}
-
-fn main() {
-    let player = player_coordinator_linux_factory();
+    let engine = TokioPlayerEngine::new(event_tx);
+    let player = PlayerRuntime::new(store, engine, command_rx, event_rx);
     let app = App::new(player);
-    app.run();
+    app.run().await;
 }
 
 pub fn add(left: u64, right: u64) -> u64 {
