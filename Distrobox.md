@@ -20,6 +20,8 @@ distrobox enter proj-foundation-box
 sudo apt install git
 ```
 
+### Rust
+
 ```bash
 # Download and install Rust:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -28,6 +30,16 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```bash
 # Plugin depedendece
 sudo apt install build-essential
+```
+
+### Flutter
+
+```bash
+sudo apt install curl git unzip xz-utils zip libglu1-mesa
+```
+
+```bash
+sudo apt install clang cmake ninja-build pkg-config libgtk-3-dev build-essential
 ```
 
 ## Oh my bash
