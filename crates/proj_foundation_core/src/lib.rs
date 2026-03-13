@@ -1,7 +1,7 @@
 use tokio::sync::mpsc;
 
 use crate::{
-    app::App, core::player::PlayerStore, infra::player::TokioPlayerEngine, runtime::PlayerRuntime,
+    app::App, core::player::PlayerStore, infra::player::LinuxPlayerEngine, runtime::PlayerRuntime,
 };
 
 pub mod app;
@@ -10,11 +10,11 @@ pub mod core;
 pub mod infra;
 pub mod runtime;
 
-async fn bootstrap() {
+async fn linux_bootstrap() {
     let (command_tx, command_rx) = mpsc::channel(32);
     let (event_tx, event_rx) = mpsc::channel(32);
     let store = PlayerStore::default();
-    let engine = TokioPlayerEngine::new(event_tx);
+    let engine = LinuxPlayerEngine::new(event_tx);
     let player = PlayerRuntime::new(store, engine, command_rx, event_rx);
     let app = App::new(player);
     app.run().await;

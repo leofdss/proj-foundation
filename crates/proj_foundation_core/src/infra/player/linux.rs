@@ -1,20 +1,25 @@
+use super::PlayerEngine;
+use super::PlayerEngineEnvId;
 use crate::common::entity::AudioRef;
 use crate::common::units::Milliseconds;
 use crate::core::player::PlayerEvent;
-use crate::infra::player::engine::PlayerEngine;
 use tokio::sync::mpsc::Sender;
 
-pub struct TokioPlayerEngine {
+pub struct LinuxPlayerEngine {
     event_tx: Sender<PlayerEvent>,
 }
 
-impl TokioPlayerEngine {
+impl LinuxPlayerEngine {
     pub fn new(event_tx: Sender<PlayerEvent>) -> Self {
-        TokioPlayerEngine { event_tx }
+        LinuxPlayerEngine { event_tx }
     }
 }
 
-impl PlayerEngine for TokioPlayerEngine {
+impl PlayerEngine for LinuxPlayerEngine {
+    fn get_env_id(&self) -> PlayerEngineEnvId {
+        PlayerEngineEnvId::Linux
+    }
+
     fn load_playlist(&self, _playlist: &[AudioRef]) {
         let sender = self.event_tx.clone();
 
