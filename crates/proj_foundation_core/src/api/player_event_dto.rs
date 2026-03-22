@@ -1,7 +1,6 @@
 use crate::common::units::Milliseconds;
 
-#[derive(Clone)]
-pub enum PlayerEvent {
+pub enum PlayerEventDto {
     Ready,
     PlaybackStarted,
     PlaybackFinished,

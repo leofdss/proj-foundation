@@ -1,4 +1,5 @@
-use tokio::sync::mpsc::Receiver;
+use tokio::sync::broadcast;
+use tokio::sync::mpsc;
 
 use crate::{
     common::entity::AudioRef,
@@ -9,38 +10,50 @@ use crate::{
 pub struct PlayerRuntime<E: PlayerEngine> {
     store: PlayerStore,
     engine: E,
-    command_rx: Receiver<PlayerCommand>,
-    event_rx: Receiver<PlayerEvent>,
+    command_rx: mpsc::Receiver<PlayerCommand>,
+    event_rx: mpsc::Receiver<PlayerEvent>,
+    event_broadcast_tx: broadcast::Sender<PlayerEvent>,
 }
 
 impl<E: PlayerEngine> PlayerRuntime<E> {
     pub fn new(
         store: PlayerStore,
         engine: E,
-        command_rx: Receiver<PlayerCommand>,
-        event_rx: Receiver<PlayerEvent>,
+        command_rx: mpsc::Receiver<PlayerCommand>,
+        event_rx: mpsc::Receiver<PlayerEvent>,
+        event_broadcast_tx: broadcast::Sender<PlayerEvent>,
     ) -> Self {
         PlayerRuntime {
             store,
             engine,
             command_rx,
             event_rx,
+            event_broadcast_tx,
         }
     }
 
-    pub async fn run(mut self) {
+    pub async fn run(&mut self) {
         loop {
             tokio::select! {
                 Some(cmd) = self.command_rx.recv() => {
                     self.process_command(cmd);
                 }
                 Some(event) = self.event_rx.recv() => {
+                    self.send_broadcast(event.clone());
                     self.process_command(
-                        PlayerCommand::EngineEvent(event)
+                        PlayerCommand::EngineEvent(event.clone())
                     );
                 }
             }
         }
+    }
+
+    fn send_broadcast(&self, event: PlayerEvent) {
+        let broadcast_tx = self.event_broadcast_tx.clone();
+
+        tokio::spawn(async move {
+            broadcast_tx.send(event).ok();
+        });
     }
 
     fn process_command(&mut self, command: PlayerCommand) {

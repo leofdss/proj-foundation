@@ -1,15 +1,15 @@
-use crate::{infra::player::engine::PlayerEngine, runtime::PlayerRuntime};
+use crate::{api::AppApi, infra::player::engine::PlayerEngine};
 
 pub struct App<E: PlayerEngine> {
-    player: PlayerRuntime<E>,
+    pub api: AppApi<E>,
 }
 
 impl<E: PlayerEngine> App<E> {
-    pub fn new(player: PlayerRuntime<E>) -> Self {
-        App { player }
+    pub fn new(controller: AppApi<E>) -> Self {
+        App { api: controller }
     }
 
-    pub async fn run(self) {
-        self.player.run().await;
+    pub async fn run(&mut self) {
+        self.api.run().await;
     }
 }
