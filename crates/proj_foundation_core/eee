@@ -1,0 +1,27 @@
+use futures::StreamExt;
+use tokio::sync::broadcast;
+use tokio_stream::wrappers::ReceiverStream; // Required for .map() on streams
+
+#[tokio::main]
+async fn main() {
+    let (tx, rx) = broadcast::channel(16);
+
+    // 1. Convert Receiver to Stream
+    let mut stream = ReceiverStream::new(rx);
+
+    // 2. Apply map (e.g., doubling the received integer)
+    let mut mapped_stream = stream.map(|result| {
+        match result {
+            Ok(val) => Ok(val * 2), // Successfully mapped
+            Err(e) => Err(e),       // Lagged error
+        }
+    });
+
+    // Send a value
+    tx.send(10).unwrap();
+
+    // 3. Process the mapped stream
+    if let Some(Ok(value)) = mapped_stream.next().await {
+        println!("Received and mapped: {}", value); // Prints: 20
+    }
+}

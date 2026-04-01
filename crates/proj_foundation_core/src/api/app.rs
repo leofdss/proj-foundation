@@ -59,7 +59,7 @@ impl<E: PlayerEngine> AppApi<E> {
     }
 
     pub fn subscribe_events(&self) -> broadcast::Receiver<PlayerEvent> {
-        self.event_broadcast_rx.resubscribe()
+        self.event_broadcast_rx.resubscribe().recv()
     }
 
     fn audios_ref_converter(&self, audios: Vec<AudioRefDto>) -> Vec<AudioRef> {

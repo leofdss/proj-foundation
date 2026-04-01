@@ -4,3 +4,7 @@ pub mod audio_ref_dto;
 pub use audio_ref_dto::AudioRefDto;
 pub use audio_ref_dto::AudioRefIdDto;
 pub mod player_event_dto;
+pub mod state_dto;
+pub use state_dto::AudioTrackDto;
+pub use state_dto::PlayerStateDto;
+pub use state_dto::PlayerStatusDto;
