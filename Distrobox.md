@@ -53,9 +53,9 @@ https://starship.rs/#quick-install
 - Zsh `~/.zshrc`
 
 ```bash
-echo 'alias code="codium"'
+alias code="codium"
 ```
 
 ```bash
-echo 'alias podman="distrobox-host-exec podman"'
+alias podman="distrobox-host-exec podman"
 ```
