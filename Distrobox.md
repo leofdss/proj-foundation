@@ -42,43 +42,20 @@ sudo apt install curl git unzip xz-utils zip libglu1-mesa
 sudo apt install clang cmake ninja-build pkg-config libgtk-3-dev build-essential
 ```
 
-## Oh my bash
+## Starship
 
-```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
-```
-
-```bash
-sed -i 's/OSH_THEME="font"/OSH_THEME="vscode"/g' ~/.bashrc
-```
-
-## Vscodium
-
-```bash
-wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
-    | gpg --dearmor \
-    | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
-```
-
-```bash
-echo -e 'Types: deb\nURIs: https://download.vscodium.com/debs\nSuites: vscodium\nComponents: main\nArchitectures: amd64 arm64\nSigned-by: /usr/share/keyrings/vscodium-archive-keyring.gpg' \
-| sudo tee /etc/apt/sources.list.d/vscodium.sources
-```
-
-```bash
-sudo apt update && sudo apt install codium
-```
-
-```bash
-distrobox-export --app codium
-```
+https://starship.rs/#quick-install
 
 ## Alias
 
+- Bash `~/.bashrc`
+- Fish `~/.config/fish/config.fish`
+- Zsh `~/.zshrc`
+
 ```bash
-echo 'alias code="codium"' >> ~/.bashrc
+echo 'alias code="codium"'
 ```
 
 ```bash
-echo 'alias podman="distrobox-host-exec podman"' >> ~/.bashrc
+echo 'alias podman="distrobox-host-exec podman"'
 ```
