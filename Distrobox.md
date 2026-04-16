@@ -23,13 +23,13 @@ sudo apt install git
 ### Rust
 
 ```bash
-# Download and install Rust:
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# Plugin depedendece
+sudo apt install build-essential
 ```
 
 ```bash
-# Plugin depedendece
-sudo apt install build-essential
+# Download and install Rust:
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 ## Starship
@@ -44,8 +44,5 @@ https://starship.rs/#quick-install
 
 ```bash
 alias code="codium"
-```
-
-```bash
 alias podman="distrobox-host-exec podman"
 ```
