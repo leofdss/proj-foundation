@@ -7,5 +7,4 @@
 ## Dependencies
 
 - Rust
-- Flutter
 - Git

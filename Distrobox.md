@@ -32,16 +32,6 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 sudo apt install build-essential
 ```
 
-### Flutter
-
-```bash
-sudo apt install curl git unzip xz-utils zip libglu1-mesa
-```
-
-```bash
-sudo apt install clang cmake ninja-build pkg-config libgtk-3-dev build-essential
-```
-
 ## Starship
 
 https://starship.rs/#quick-install
